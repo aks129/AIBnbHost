@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Bot, Send, Edit, RotateCcw, Clock, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { openDemoScheduling } from "@/lib/demo-tracking";
 
 interface GenerateMessageResponse {
   message: string;
@@ -275,7 +276,7 @@ export default function InteractiveDemo() {
                   </p>
                   <Button 
                     data-testid="button-schedule-demo-interactive"
-                    onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
+                    onClick={() => openDemoScheduling("interactive-demo", undefined, formData.guestName)}
                     className="bg-red-500 text-white hover:bg-red-600 px-6 py-3 text-lg"
                   >
                     <Calendar className="w-5 h-5 mr-2" />

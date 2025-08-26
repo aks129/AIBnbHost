@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, CheckCircle, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { openDemoScheduling } from "@/lib/demo-tracking";
 
 interface EmailSignupResponse {
   success: boolean;
@@ -86,7 +87,7 @@ export default function EmailSignup() {
           </p>
           <Button 
             data-testid="button-schedule-demo-success"
-            onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
+            onClick={() => openDemoScheduling("email-signup-success", formData.email, formData.name)}
             className="bg-red-500 text-white hover:bg-red-600 w-full"
           >
             <Calendar className="w-4 h-4 mr-2" />
@@ -160,7 +161,7 @@ export default function EmailSignup() {
           </p>
           <Button 
             data-testid="button-schedule-demo-signup"
-            onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
+            onClick={() => openDemoScheduling("email-signup-form", formData.email || undefined, formData.name || undefined)}
             variant="outline"
             className="w-full border-red-200 text-red-600 hover:bg-red-50"
           >

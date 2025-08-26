@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateGuestMessage, analyzeGuestSentiment } from "./services/claude";
-import { sendSignupNotification } from "./services/email";
+import { sendSignupNotification, sendDemoInterestNotification } from "./services/email";
 import { generateMessageSchema, emailSignupSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -190,6 +190,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error processing email signup:", error);
       res.status(500).json({ 
         error: "Failed to process signup",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Demo interest tracking route
+  app.post("/api/demo-interest", async (req, res) => {
+    try {
+      const { email, name, source, userAgent } = req.body;
+      
+      // Send notification email about demo interest
+      try {
+        await sendDemoInterestNotification({
+          email: email || undefined,
+          name: name || undefined,
+          source: source || "website",
+          timestamp: new Date().toISOString(),
+          userAgent: userAgent || req.get('User-Agent')
+        });
+      } catch (emailError) {
+        console.error("Failed to send demo interest notification:", emailError);
+        // Don't fail the request if email notification fails
+      }
+      
+      res.json({ 
+        success: true, 
+        message: "Demo interest tracked successfully"
+      });
+    } catch (error) {
+      console.error("Error tracking demo interest:", error);
+      res.status(500).json({ 
+        error: "Failed to track demo interest",
         message: error instanceof Error ? error.message : "Unknown error"
       });
     }

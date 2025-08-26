@@ -7,6 +7,7 @@ import TemplateLibrary from "@/components/template-library";
 import InteractiveDemo from "@/components/interactive-demo";
 import AnalyticsSection from "@/components/analytics-section";
 import EmailSignup from "@/components/email-signup";
+import { openDemoScheduling } from "@/lib/demo-tracking";
 
 export default function Dashboard() {
   return (
@@ -52,7 +53,7 @@ export default function Dashboard() {
             <button 
               data-testid="button-schedule-demo-cta"
               className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-red-500 transition-all"
-              onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
+              onClick={() => openDemoScheduling("cta-section")}
             >
               Schedule Demo Call
             </button>

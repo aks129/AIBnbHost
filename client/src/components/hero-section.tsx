@@ -1,5 +1,6 @@
 import { Play, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { openDemoScheduling } from "@/lib/demo-tracking";
 
 export default function HeroSection() {
   return (
@@ -26,7 +27,7 @@ export default function HeroSection() {
               data-testid="button-schedule-demo"
               variant="outline"
               className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-red-500 transition-all bg-transparent"
-              onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
+              onClick={() => openDemoScheduling("hero-section")}
             >
               <Calendar className="w-5 h-5 mr-2" />
               Schedule Demo
