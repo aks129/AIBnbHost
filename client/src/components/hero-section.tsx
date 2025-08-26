@@ -8,10 +8,10 @@ export default function HeroSection() {
         <div className="text-center text-white">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Guarantee 5-Star Reviews<br />
-            <span className="text-yellow-300">with AI-Powered Communication</span>
+            <span className="text-yellow-300">with Lana AI Co-Host</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-            Let Claude AI automate your entire Airbnb guest journey - from pre-arrival messages to post-stay follow-ups. 
+            Let Lana AI automate your entire Airbnb guest journey - from pre-arrival messages to post-stay follow-ups. 
             Delight every guest with personalized, timely communication.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

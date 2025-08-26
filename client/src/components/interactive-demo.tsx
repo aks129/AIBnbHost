@@ -74,9 +74,9 @@ export default function InteractiveDemo() {
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">See Claude AI in Action</h2>
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">See Lana AI in Action</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Experience how Claude AI crafts personalized messages in real-time based on guest profiles, timing, and context.
+            Experience how Lana AI crafts personalized messages in real-time based on guest profiles, timing, and context.
           </p>
         </div>
 
@@ -182,7 +182,7 @@ export default function InteractiveDemo() {
                     className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors"
                   >
                     <Bot className="w-4 h-4 mr-2" />
-                    {generateMessage.isPending ? "Generating..." : "Generate Message with Claude AI"}
+                    {generateMessage.isPending ? "Generating..." : "Generate Message with Lana AI"}
                   </Button>
                 </div>
               </CardContent>
@@ -197,7 +197,7 @@ export default function InteractiveDemo() {
                     <div className="flex items-center justify-center h-64">
                       <div className="text-center">
                         <Bot className="w-8 h-8 text-red-500 animate-pulse mx-auto mb-2" />
-                        <p className="text-gray-600">Claude AI is crafting your message...</p>
+                        <p className="text-gray-600">Lana AI is crafting your message...</p>
                       </div>
                     </div>
                   ) : generatedMessage ? (
@@ -214,7 +214,7 @@ export default function InteractiveDemo() {
                           </div>
                           <div className="text-xs text-gray-600 mt-2 flex items-center">
                             <Clock className="w-3 h-3 mr-1" />
-                            Generated with Claude AI
+                            Generated with Lana AI
                           </div>
                         </div>
                       </div>
@@ -253,7 +253,7 @@ export default function InteractiveDemo() {
                     <div className="flex items-center justify-center h-64 text-gray-500">
                       <div className="text-center">
                         <Bot className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                        <p>Click "Generate Message" to see Claude AI in action</p>
+                        <p>Click "Generate Message" to see Lana AI in action</p>
                       </div>
                     </div>
                   )}

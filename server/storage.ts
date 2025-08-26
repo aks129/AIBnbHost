@@ -1,4 +1,4 @@
-import { type Guest, type Message, type Template, type Analytics, type InsertGuest, type InsertMessage, type InsertTemplate, type InsertAnalytics } from "@shared/schema";
+import { type Guest, type Message, type Template, type Analytics, type EmailSignup, type InsertGuest, type InsertMessage, type InsertTemplate, type InsertAnalytics, type InsertEmailSignup } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -22,6 +22,10 @@ export interface IStorage {
   getAnalytics(): Promise<Analytics[]>;
   getCurrentMonthAnalytics(): Promise<Analytics | undefined>;
   createOrUpdateAnalytics(analytics: InsertAnalytics): Promise<Analytics>;
+  
+  // Email signup operations
+  getEmailSignups(): Promise<EmailSignup[]>;
+  createEmailSignup(signup: InsertEmailSignup): Promise<EmailSignup>;
 }
 
 export class MemStorage implements IStorage {
@@ -29,12 +33,14 @@ export class MemStorage implements IStorage {
   private messages: Map<string, Message>;
   private templates: Map<string, Template>;
   private analytics: Map<string, Analytics>;
+  private emailSignups: Map<string, EmailSignup>;
 
   constructor() {
     this.guests = new Map();
     this.messages = new Map();
     this.templates = new Map();
     this.analytics = new Map();
+    this.emailSignups = new Map();
     this.seedData();
   }
 
@@ -271,6 +277,23 @@ export class MemStorage implements IStorage {
       this.analytics.set(id, analytics);
       return analytics;
     }
+  }
+
+  async getEmailSignups(): Promise<EmailSignup[]> {
+    return Array.from(this.emailSignups.values());
+  }
+
+  async createEmailSignup(insertSignup: InsertEmailSignup): Promise<EmailSignup> {
+    const id = randomUUID();
+    const signup: EmailSignup = {
+      ...insertSignup,
+      id,
+      createdAt: new Date(),
+      name: insertSignup.name || null,
+      source: insertSignup.source || "website",
+    };
+    this.emailSignups.set(id, signup);
+    return signup;
   }
 }
 

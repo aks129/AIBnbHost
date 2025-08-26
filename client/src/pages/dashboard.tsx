@@ -6,6 +6,7 @@ import WorkflowTimeline from "@/components/workflow-timeline";
 import TemplateLibrary from "@/components/template-library";
 import InteractiveDemo from "@/components/interactive-demo";
 import AnalyticsSection from "@/components/analytics-section";
+import EmailSignup from "@/components/email-signup";
 
 export default function Dashboard() {
   return (
@@ -19,6 +20,19 @@ export default function Dashboard() {
       <InteractiveDemo />
       <AnalyticsSection />
       
+      {/* Email Signup Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">Join the Revolution</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Be among the first hosts to experience the power of Lana AI. Get early access and transform your Airbnb hosting today.
+            </p>
+          </div>
+          <EmailSignup />
+        </div>
+      </section>
+      
       {/* Call to Action Section */}
       <section className="py-20 gradient-cta">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
@@ -26,7 +40,7 @@ export default function Dashboard() {
             Ready to Transform Your Hosting?
           </h2>
           <p className="text-xl text-white opacity-90 mb-8">
-            Join thousands of hosts who've automated their guest communication and achieved consistently 5-star reviews with Claude AI.
+            Join thousands of hosts who've automated their guest communication and achieved consistently 5-star reviews with Lana AI.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
@@ -57,10 +71,10 @@ export default function Dashboard() {
                 <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
                 </svg>
-                <span className="text-xl font-bold">Claude AI Host</span>
+                <span className="text-xl font-bold">Lana AI Airbnb Co-Host</span>
               </div>
               <p className="text-gray-400">
-                Automate your Airbnb guest communication and guarantee 5-star reviews with Claude AI.
+                Automate your Airbnb guest communication and guarantee 5-star reviews with Lana AI.
               </p>
             </div>
             <div>
@@ -92,7 +106,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Claude AI Host. All rights reserved.</p>
+            <p>&copy; 2024 Lana AI Airbnb Co-Host. All rights reserved.</p>
           </div>
         </div>
       </footer>

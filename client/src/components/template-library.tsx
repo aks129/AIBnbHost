@@ -94,7 +94,7 @@ export default function TemplateLibrary() {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">Smart Message Templates</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Claude AI generates personalized messages using our extensive template library, automatically adapting content based on guest profiles and local context.
+            Lana AI generates personalized messages using our extensive template library, automatically adapting content based on guest profiles and local context.
           </p>
         </div>
 

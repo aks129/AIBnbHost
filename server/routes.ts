@@ -2,7 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateGuestMessage, analyzeGuestSentiment } from "./services/claude";
-import { generateMessageSchema } from "@shared/schema";
+import { sendSignupNotification } from "./services/email";
+import { generateMessageSchema, emailSignupSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -138,6 +139,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error analyzing sentiment:", error);
       res.status(500).json({ 
         error: "Failed to analyze sentiment",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Email signup route
+  app.post("/api/email-signup", async (req, res) => {
+    try {
+      const validatedData = emailSignupSchema.parse(req.body);
+      
+      // Check if email already exists
+      const existingSignups = await storage.getEmailSignups();
+      const existingEmail = existingSignups.find(signup => signup.email === validatedData.email);
+      
+      if (existingEmail) {
+        return res.status(409).json({ error: "Email already registered" });
+      }
+      
+      // Create the signup
+      const signup = await storage.createEmailSignup({
+        email: validatedData.email,
+        name: validatedData.name,
+        source: "website"
+      });
+      
+      // Send notification email
+      try {
+        await sendSignupNotification({
+          email: signup.email,
+          name: signup.name || undefined,
+          source: signup.source || "website",
+          timestamp: new Date().toISOString()
+        });
+      } catch (emailError) {
+        console.error("Failed to send notification email:", emailError);
+        // Don't fail the signup if email notification fails
+      }
+      
+      res.json({ 
+        success: true, 
+        message: "Successfully signed up for updates!",
+        id: signup.id 
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid signup data", details: error.errors });
+      }
+      
+      console.error("Error processing email signup:", error);
+      res.status(500).json({ 
+        error: "Failed to process signup",
         message: error instanceof Error ? error.message : "Unknown error"
       });
     }

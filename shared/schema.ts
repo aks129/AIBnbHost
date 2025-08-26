@@ -61,8 +61,21 @@ export const insertTemplateSchema = createInsertSchema(templates).omit({
   id: true,
 });
 
+export const emailSignups = pgTable("email_signups", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull().unique(),
+  name: text("name"),
+  source: text("source").default("website"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertAnalyticsSchema = createInsertSchema(analytics).omit({
   id: true,
+});
+
+export const insertEmailSignupSchema = createInsertSchema(emailSignups).omit({
+  id: true,
+  createdAt: true,
 });
 
 export const generateMessageSchema = z.object({
@@ -73,12 +86,20 @@ export const generateMessageSchema = z.object({
   guestName: z.string(),
 });
 
+export const emailSignupSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  name: z.string().min(1, "Name is required"),
+});
+
 export type Guest = typeof guests.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type Template = typeof templates.$inferSelect;
 export type Analytics = typeof analytics.$inferSelect;
+export type EmailSignup = typeof emailSignups.$inferSelect;
 export type InsertGuest = z.infer<typeof insertGuestSchema>;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
 export type InsertAnalytics = z.infer<typeof insertAnalyticsSchema>;
+export type InsertEmailSignup = z.infer<typeof insertEmailSignupSchema>;
 export type GenerateMessageRequest = z.infer<typeof generateMessageSchema>;
+export type EmailSignupRequest = z.infer<typeof emailSignupSchema>;

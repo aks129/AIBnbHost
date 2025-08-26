@@ -63,7 +63,7 @@ export default function AnalyticsSection() {
               <h3 className="text-xl font-semibold text-gray-800 mb-6">Review Rating Trends</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Before Claude AI</span>
+                  <span className="text-gray-600">Before Lana AI</span>
                   <div className="flex items-center">
                     <span className="text-2xl font-bold text-gray-600 mr-2">4.2</span>
                     <div className="flex text-gray-400">
@@ -79,7 +79,7 @@ export default function AnalyticsSection() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">After Claude AI</span>
+                  <span className="text-gray-600">After Lana AI</span>
                   <div className="flex items-center">
                     <span className="text-2xl font-bold text-green-600 mr-2" data-testid="current-rating">
                       {analytics?.averageRating || "4.96"}

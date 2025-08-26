@@ -70,7 +70,7 @@ export default function WorkflowTimeline() {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">AI-Powered Guest Journey</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Claude AI automatically manages every touchpoint of your guest's experience, ensuring consistent, personalized communication.
+            Lana AI automatically manages every touchpoint of your guest's experience, ensuring consistent, personalized communication.
           </p>
         </div>
 
