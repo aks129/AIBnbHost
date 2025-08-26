@@ -179,18 +179,24 @@ export default function Subscribe() {
           setClientSecret(result.clientSecret);
           setShowPayment(true);
         } else {
+          // For trials, redirect directly to success page
           toast({
-            title: "Setup Complete",
-            description: "Your trial has started! Check your email for next steps.",
+            title: "Trial Started!",
+            description: "Your 30-day free trial is now active.",
           });
+          setTimeout(() => {
+            window.location.href = "/success";
+          }, 2000);
         }
       } else {
-        throw new Error("Failed to create subscription");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create subscription");
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Subscription error:", error);
       toast({
         title: "Error",
-        description: "Failed to start subscription. Please try again.",
+        description: error.message || "Failed to start subscription. Please try again.",
         variant: "destructive",
       });
     }

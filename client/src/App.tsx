@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Dashboard from "@/pages/dashboard";
 import Subscribe from "@/pages/subscribe";
+import Success from "@/pages/success";
+import GetStarted from "@/pages/get-started";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -12,6 +14,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/subscribe" component={Subscribe} />
+      <Route path="/success" component={Success} />
+      <Route path="/get-started" component={GetStarted} />
       <Route component={NotFound} />
     </Switch>
   );

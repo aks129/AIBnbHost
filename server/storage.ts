@@ -198,9 +198,9 @@ export class MemStorage implements IStorage {
       name: insertUser.name || null,
       stripeCustomerId: insertUser.stripeCustomerId || null,
       stripeSubscriptionId: insertUser.stripeSubscriptionId || null,
-      subscriptionStatus: insertUser.subscriptionStatus || null,
+      subscriptionStatus: (insertUser.subscriptionStatus as User['subscriptionStatus']) || null,
       trialEndsAt: insertUser.trialEndsAt || null,
-      subscriptionType: insertUser.subscriptionType || null,
+      subscriptionType: (insertUser.subscriptionType as User['subscriptionType']) || null,
       createdAt: new Date(),
     };
     this.users.set(id, user);
@@ -217,9 +217,9 @@ export class MemStorage implements IStorage {
       name: userUpdate.name !== undefined ? userUpdate.name || null : user.name,
       stripeCustomerId: userUpdate.stripeCustomerId !== undefined ? userUpdate.stripeCustomerId || null : user.stripeCustomerId,
       stripeSubscriptionId: userUpdate.stripeSubscriptionId !== undefined ? userUpdate.stripeSubscriptionId || null : user.stripeSubscriptionId,
-      subscriptionStatus: userUpdate.subscriptionStatus !== undefined ? userUpdate.subscriptionStatus || null : user.subscriptionStatus,
+      subscriptionStatus: userUpdate.subscriptionStatus !== undefined ? (userUpdate.subscriptionStatus as User['subscriptionStatus']) || null : user.subscriptionStatus,
       trialEndsAt: userUpdate.trialEndsAt !== undefined ? userUpdate.trialEndsAt || null : user.trialEndsAt,
-      subscriptionType: userUpdate.subscriptionType !== undefined ? userUpdate.subscriptionType || null : user.subscriptionType,
+      subscriptionType: userUpdate.subscriptionType !== undefined ? (userUpdate.subscriptionType as User['subscriptionType']) || null : user.subscriptionType,
     };
     this.users.set(id, updatedUser);
     return updatedUser;

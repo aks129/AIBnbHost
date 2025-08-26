@@ -308,12 +308,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Failed to store user:", error);
       }
 
-      const invoice = subscription.latest_invoice;
-      const clientSecret = typeof invoice === 'object' && invoice?.payment_intent 
-        ? (typeof invoice.payment_intent === 'object' 
-          ? invoice.payment_intent.client_secret 
-          : null)
-        : null;
+      // For subscription with trial, payment intent might not be available immediately
+      const latestInvoice = subscription.latest_invoice as any;
+      const clientSecret = latestInvoice?.payment_intent?.client_secret || null;
 
       res.json({
         subscriptionId: subscription.id,
