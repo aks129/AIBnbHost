@@ -1,7 +1,14 @@
-import { type Guest, type Message, type Template, type Analytics, type EmailSignup, type InsertGuest, type InsertMessage, type InsertTemplate, type InsertAnalytics, type InsertEmailSignup } from "@shared/schema";
+import { type User, type Guest, type Message, type Template, type Analytics, type EmailSignup, type InsertUser, type InsertGuest, type InsertMessage, type InsertTemplate, type InsertAnalytics, type InsertEmailSignup } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
+  // User operations
+  getUsers(): Promise<User[]>;
+  getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
+
   // Guest operations
   getGuests(): Promise<Guest[]>;
   getGuest(id: string): Promise<Guest | undefined>;
@@ -29,6 +36,7 @@ export interface IStorage {
 }
 
 export class MemStorage implements IStorage {
+  private users: Map<string, User>;
   private guests: Map<string, Guest>;
   private messages: Map<string, Message>;
   private templates: Map<string, Template>;
@@ -36,6 +44,7 @@ export class MemStorage implements IStorage {
   private emailSignups: Map<string, EmailSignup>;
 
   constructor() {
+    this.users = new Map();
     this.guests = new Map();
     this.messages = new Map();
     this.templates = new Map();
@@ -166,6 +175,54 @@ export class MemStorage implements IStorage {
     };
 
     this.analytics.set(currentAnalytics.id, currentAnalytics);
+  }
+
+  // User operations
+  async getUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.email === email);
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = randomUUID();
+    const user: User = { 
+      ...insertUser, 
+      id,
+      name: insertUser.name || null,
+      stripeCustomerId: insertUser.stripeCustomerId || null,
+      stripeSubscriptionId: insertUser.stripeSubscriptionId || null,
+      subscriptionStatus: insertUser.subscriptionStatus || null,
+      trialEndsAt: insertUser.trialEndsAt || null,
+      subscriptionType: insertUser.subscriptionType || null,
+      createdAt: new Date(),
+    };
+    this.users.set(id, user);
+    return user;
+  }
+
+  async updateUser(id: string, userUpdate: Partial<InsertUser>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    
+    const updatedUser: User = { 
+      ...user, 
+      ...userUpdate,
+      name: userUpdate.name !== undefined ? userUpdate.name || null : user.name,
+      stripeCustomerId: userUpdate.stripeCustomerId !== undefined ? userUpdate.stripeCustomerId || null : user.stripeCustomerId,
+      stripeSubscriptionId: userUpdate.stripeSubscriptionId !== undefined ? userUpdate.stripeSubscriptionId || null : user.stripeSubscriptionId,
+      subscriptionStatus: userUpdate.subscriptionStatus !== undefined ? userUpdate.subscriptionStatus || null : user.subscriptionStatus,
+      trialEndsAt: userUpdate.trialEndsAt !== undefined ? userUpdate.trialEndsAt || null : user.trialEndsAt,
+      subscriptionType: userUpdate.subscriptionType !== undefined ? userUpdate.subscriptionType || null : user.subscriptionType,
+    };
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 
   async getGuests(): Promise<Guest[]> {

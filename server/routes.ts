@@ -3,8 +3,17 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateGuestMessage, analyzeGuestSentiment } from "./services/claude";
 import { sendSignupNotification, sendDemoInterestNotification } from "./services/email";
-import { generateMessageSchema, emailSignupSchema } from "@shared/schema";
+import { generateMessageSchema, emailSignupSchema, type User } from "@shared/schema";
 import { z } from "zod";
+import Stripe from "stripe";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2025-07-30.basil",
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
@@ -224,6 +233,163 @@ export async function registerRoutes(app: Express): Promise<Server> {
         error: "Failed to track demo interest",
         message: error instanceof Error ? error.message : "Unknown error"
       });
+    }
+  });
+
+  // Stripe payment routes
+  app.post("/api/create-subscription", async (req, res) => {
+    try {
+      const { email, name, planType = 'monthly' } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+
+      // Create or get Stripe customer
+      let customer;
+      const existingCustomers = await stripe.customers.list({
+        email: email,
+        limit: 1,
+      });
+
+      if (existingCustomers.data.length > 0) {
+        customer = existingCustomers.data[0];
+      } else {
+        customer = await stripe.customers.create({
+          email,
+          name,
+        });
+      }
+
+      // Create price objects for monthly and yearly plans
+      const prices = {
+        monthly: await stripe.prices.create({
+          unit_amount: 2999, // $29.99
+          currency: 'usd',
+          recurring: { interval: 'month' },
+          product_data: {
+            name: 'Lana AI Airbnb Co-Host - Monthly',
+          },
+        }),
+        yearly: await stripe.prices.create({
+          unit_amount: 32389, // $323.89 (10% discount)
+          currency: 'usd',
+          recurring: { interval: 'year' },
+          product_data: {
+            name: 'Lana AI Airbnb Co-Host - Yearly',
+          },
+        }),
+      };
+
+      // Create subscription with 30-day trial
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{
+          price: prices[planType as keyof typeof prices].id,
+        }],
+        trial_period_days: 30,
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
+      });
+
+      // Store user in database
+      try {
+        await storage.createUser({
+          email,
+          name,
+          stripeCustomerId: customer.id,
+          stripeSubscriptionId: subscription.id,
+          subscriptionStatus: 'trialing',
+          trialEndsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+          subscriptionType: planType as 'monthly' | 'yearly',
+        });
+      } catch (error) {
+        console.error("Failed to store user:", error);
+      }
+
+      const invoice = subscription.latest_invoice;
+      const clientSecret = typeof invoice === 'object' && invoice?.payment_intent 
+        ? (typeof invoice.payment_intent === 'object' 
+          ? invoice.payment_intent.client_secret 
+          : null)
+        : null;
+
+      res.json({
+        subscriptionId: subscription.id,
+        clientSecret,
+        customerId: customer.id,
+        trialEnd: subscription.trial_end,
+      });
+    } catch (error: any) {
+      console.error("Stripe subscription error:", error);
+      res.status(500).json({ 
+        error: "Failed to create subscription",
+        message: error.message
+      });
+    }
+  });
+
+  app.post("/api/create-payment-intent", async (req, res) => {
+    try {
+      const { amount, planType = 'monthly' } = req.body;
+      
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to cents
+        currency: "usd",
+        metadata: {
+          plan: planType,
+        },
+      });
+
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error: any) {
+      console.error("Payment intent error:", error);
+      res.status(500).json({ 
+        error: "Failed to create payment intent",
+        message: error.message
+      });
+    }
+  });
+
+  // Webhook for Stripe events
+  app.post("/api/stripe-webhook", async (req, res) => {
+    const sig = req.headers['stripe-signature'] as string;
+    
+    try {
+      // Note: In production, you'd verify the webhook signature here
+      const event = req.body;
+
+      switch (event.type) {
+        case 'customer.subscription.updated':
+          const subscription = event.data.object;
+          // Update user subscription status in database
+          try {
+            const users = await storage.getUsers();
+            const user = users.find((u: User) => u.stripeSubscriptionId === subscription.id);
+            if (user) {
+              await storage.updateUser(user.id, {
+                subscriptionStatus: subscription.status as 'active' | 'trialing' | 'canceled' | 'incomplete' | 'past_due',
+              });
+            }
+          } catch (error) {
+            console.error("Failed to update user subscription status:", error);
+          }
+          break;
+
+        case 'invoice.payment_failed':
+          // Handle failed payment
+          console.log('Payment failed for subscription:', event.data.object.subscription);
+          break;
+
+        default:
+          console.log(`Unhandled event type ${event.type}`);
+      }
+
+      res.json({ received: true });
+    } catch (error) {
+      console.error("Webhook error:", error);
+      res.status(400).send(`Webhook Error: ${error}`);
     }
   });
 

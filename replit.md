@@ -1,6 +1,6 @@
 # Overview
 
-This is an AI-powered Airbnb host communication platform that automates guest messaging throughout the entire stay lifecycle. The application leverages Claude AI to generate personalized guest messages, manage templates, track analytics, and streamline host-guest communication to consistently achieve 5-star reviews. It features a modern dashboard for monitoring guest activities, automated workflow management, and comprehensive analytics tracking.
+This is "Lana AI Airbnb Co-Host" - a comprehensive SaaS web application that showcases and sells AI automation for Airbnb client communication to guarantee 5-star reviews. The platform serves as both a demonstration tool and fully functional subscription service with 30-day trial and $29.99/month pricing (yearly with 10% discount). The application leverages Claude AI to generate personalized guest messages, manage templates, track analytics, and streamline host-guest communication to consistently achieve 5-star reviews.
 
 # User Preferences
 
@@ -32,10 +32,12 @@ Preferred communication style: Simple, everyday language.
 - **Session Management**: Connect-pg-simple for PostgreSQL session storage
 
 ## Database Schema Design
+- **Users Table**: Stores subscriber information with Stripe customer and subscription IDs
 - **Guests Table**: Stores guest information, check-in/out dates, guest types, and special requests
 - **Messages Table**: Tracks all AI-generated and manual messages with timestamps and templates
 - **Templates Table**: Manages reusable message templates by category and guest type
 - **Analytics Table**: Aggregates monthly performance metrics and guest satisfaction data
+- **Email Signups Table**: Tracks lead generation and demo interest for marketing
 
 ## Authentication and Authorization
 - **Session-based Authentication**: Express sessions with PostgreSQL storage
@@ -63,6 +65,8 @@ Preferred communication style: Simple, everyday language.
 
 ## AI and External APIs
 - **AI Service**: Anthropic Claude API for message generation and sentiment analysis
+- **Payment Processing**: Stripe API for subscription management with 30-day trials
+- **Email Notifications**: SendGrid for demo interest and signup notifications
 - **API Key Management**: Environment-based configuration for API credentials
 
 ## UI and Styling

@@ -1,7 +1,19 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, jsonb, decimal, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, jsonb, decimal, integer, serial } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").unique().notNull(),
+  name: text("name"),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  subscriptionStatus: text("subscription_status").$type<'active' | 'trialing' | 'canceled' | 'incomplete' | 'past_due'>(),
+  trialEndsAt: timestamp("trial_ends_at"),
+  subscriptionType: text("subscription_type").$type<'monthly' | 'yearly'>(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
 
 export const guests = pgTable("guests", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -78,6 +90,11 @@ export const insertEmailSignupSchema = createInsertSchema(emailSignups).omit({
   createdAt: true,
 });
 
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const generateMessageSchema = z.object({
   guestType: z.string(),
   communicationStage: z.string(),
@@ -91,11 +108,13 @@ export const emailSignupSchema = z.object({
   name: z.string().min(1, "Name is required"),
 });
 
+export type User = typeof users.$inferSelect;
 export type Guest = typeof guests.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type Template = typeof templates.$inferSelect;
 export type Analytics = typeof analytics.$inferSelect;
 export type EmailSignup = typeof emailSignups.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertGuest = z.infer<typeof insertGuestSchema>;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Play, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { openDemoScheduling } from "@/lib/demo-tracking";
@@ -6,6 +7,7 @@ import DemoModal from "@/components/demo-modal";
 
 export default function HeroSection() {
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [, setLocation] = useLocation();
 
   return (
     <section className="gradient-hero py-20">
@@ -21,9 +23,17 @@ export default function HeroSection() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
+              data-testid="button-start-trial-hero"
+              onClick={() => setLocation("/subscribe")}
+              className="bg-white text-red-500 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all"
+            >
+              Start Free 30-Day Trial
+            </Button>
+            <Button 
               data-testid="button-watch-demo"
               onClick={() => setIsDemoModalOpen(true)}
-              className="bg-white text-red-500 px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all"
+              variant="outline"
+              className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-red-500 transition-all bg-transparent"
             >
               <Play className="w-5 h-5 mr-2" />
               Watch Demo
@@ -38,6 +48,9 @@ export default function HeroSection() {
               Schedule Demo
             </Button>
           </div>
+          <p className="text-white/75 mt-4 text-sm">
+            No credit card required • Cancel anytime • Setup in under 5 minutes
+          </p>
         </div>
       </div>
       

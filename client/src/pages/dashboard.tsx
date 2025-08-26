@@ -1,3 +1,4 @@
+import { useLocation } from "wouter";
 import Navigation from "@/components/navigation";
 import HeroSection from "@/components/hero-section";
 import StatsSection from "@/components/stats-section";
@@ -46,6 +47,7 @@ export default function Dashboard() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
               data-testid="button-start-trial"
+              onClick={() => setLocation("/subscribe")}
               className="bg-white text-red-500 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all"
             >
               Start Free 30-Day Trial
