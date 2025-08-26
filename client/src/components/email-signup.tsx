@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, CheckCircle } from "lucide-react";
+import { Mail, CheckCircle, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -81,9 +81,17 @@ export default function EmailSignup() {
           <p className="text-gray-600 mb-4">
             Thanks for signing up! We'll keep you updated on Lana AI's latest features and hosting insights.
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 mb-4">
             Check your email for a confirmation message.
           </p>
+          <Button 
+            data-testid="button-schedule-demo-success"
+            onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
+            className="bg-red-500 text-white hover:bg-red-600 w-full"
+          >
+            <Calendar className="w-4 h-4 mr-2" />
+            Schedule Your Demo Now
+          </Button>
         </CardContent>
       </Card>
     );
@@ -145,6 +153,21 @@ export default function EmailSignup() {
             {emailSignup.isPending ? "Signing Up..." : "Get Early Access"}
           </Button>
         </form>
+
+        <div className="mt-6 pt-4 border-t border-gray-200">
+          <p className="text-center text-sm text-gray-600 mb-3">
+            Or skip the wait and schedule a demo:
+          </p>
+          <Button 
+            data-testid="button-schedule-demo-signup"
+            onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
+            variant="outline"
+            className="w-full border-red-200 text-red-600 hover:bg-red-50"
+          >
+            <Calendar className="w-4 h-4 mr-2" />
+            Schedule Demo Instead
+          </Button>
+        </div>
 
         <p className="text-xs text-gray-500 text-center mt-4">
           We respect your privacy. Unsubscribe at any time.

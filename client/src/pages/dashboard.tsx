@@ -50,8 +50,9 @@ export default function Dashboard() {
               Start Free 30-Day Trial
             </button>
             <button 
-              data-testid="button-schedule-demo"
+              data-testid="button-schedule-demo-cta"
               className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-red-500 transition-all"
+              onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
             >
               Schedule Demo Call
             </button>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Bot, Send, Edit, RotateCcw, Clock } from "lucide-react";
+import { Bot, Send, Edit, RotateCcw, Clock, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -261,6 +261,30 @@ export default function InteractiveDemo() {
               </CardContent>
             </Card>
           </div>
+          
+          {/* Demo CTA */}
+          {generatedMessage && (
+            <div className="mt-12 text-center">
+              <Card className="max-w-lg mx-auto shadow-lg bg-gradient-to-r from-red-50 to-orange-50">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                    Impressed by Lana AI?
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    See how this can transform your entire Airbnb hosting workflow. Schedule a personalized demo to explore all features.
+                  </p>
+                  <Button 
+                    data-testid="button-schedule-demo-interactive"
+                    onClick={() => window.open("https://calendar.app.google/17Rqf8xXDXpweVPw5", "_blank")}
+                    className="bg-red-500 text-white hover:bg-red-600 px-6 py-3 text-lg"
+                  >
+                    <Calendar className="w-5 h-5 mr-2" />
+                    Schedule Your Demo
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </section>
