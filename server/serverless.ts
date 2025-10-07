@@ -1,6 +1,9 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { serveStatic } from "./vite";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.use(express.json());
@@ -8,7 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   const start = Date.now();
-  const path = req.path;
+  const reqPath = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
   const originalResJson = res.json;
@@ -19,8 +22,8 @@ app.use((req, res, next) => {
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+    if (reqPath.startsWith("/api")) {
+      let logLine = `${req.method} ${reqPath} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
@@ -49,15 +52,21 @@ async function initialize() {
       res.status(status).json({ message });
     });
 
-    serveStatic(app);
+    // Serve static files from dist/public
+    const publicPath = path.join(__dirname, "public");
+    app.use(express.static(publicPath));
+
+    // SPA fallback - serve index.html for all other routes
+    app.use("*", (_req, res) => {
+      res.sendFile(path.join(publicPath, "index.html"));
+    });
+
     isInitialized = true;
   }
 }
 
-// Wrap the app to ensure initialization happens before handling requests
-const handler = async (req: Request, res: Response, next: NextFunction) => {
+// Export handler for Vercel
+export default async function handler(req: Request, res: Response) {
   await initialize();
-  app(req, res, next);
-};
-
-export default handler;
+  return app(req, res);
+}
