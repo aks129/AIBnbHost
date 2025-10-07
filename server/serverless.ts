@@ -36,16 +36,28 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
-  await registerRoutes(app);
+// Initialize routes synchronously
+let isInitialized = false;
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-    res.status(status).json({ message });
-  });
+async function initialize() {
+  if (!isInitialized) {
+    await registerRoutes(app);
 
-  serveStatic(app);
-})();
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
+      res.status(status).json({ message });
+    });
 
-export default app;
+    serveStatic(app);
+    isInitialized = true;
+  }
+}
+
+// Wrap the app to ensure initialization happens before handling requests
+const handler = async (req: Request, res: Response, next: NextFunction) => {
+  await initialize();
+  app(req, res, next);
+};
+
+export default handler;
