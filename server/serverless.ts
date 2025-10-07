@@ -39,34 +39,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// Initialize routes synchronously
-let isInitialized = false;
+// Initialize routes - this runs once when the module is loaded
+await setupRoutes(app);
 
-async function initialize() {
-  if (!isInitialized) {
-    await setupRoutes(app);
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(status).json({ message });
+});
 
-    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-      const status = err.status || err.statusCode || 500;
-      const message = err.message || "Internal Server Error";
-      res.status(status).json({ message });
-    });
+// Serve static files from dist/public
+const publicPath = path.join(__dirname, "public");
+app.use(express.static(publicPath));
 
-    // Serve static files from dist/public
-    const publicPath = path.join(__dirname, "public");
-    app.use(express.static(publicPath));
+// SPA fallback - serve index.html for all other routes
+app.use("*", (_req, res) => {
+  res.sendFile(path.join(publicPath, "index.html"));
+});
 
-    // SPA fallback - serve index.html for all other routes
-    app.use("*", (_req, res) => {
-      res.sendFile(path.join(publicPath, "index.html"));
-    });
-
-    isInitialized = true;
-  }
-}
-
-// Export handler for Vercel
-export default async function handler(req: Request, res: Response) {
-  await initialize();
-  return app(req, res);
-}
+// Export the Express app directly for Vercel
+export default app;
