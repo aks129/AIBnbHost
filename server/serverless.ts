@@ -1,5 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
+import { setupRoutes } from "./routes";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -44,7 +44,7 @@ let isInitialized = false;
 
 async function initialize() {
   if (!isInitialized) {
-    await registerRoutes(app);
+    await setupRoutes(app);
 
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
