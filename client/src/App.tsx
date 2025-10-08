@@ -11,6 +11,7 @@ import Success from "@/pages/success";
 import GetStarted from "@/pages/get-started";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
+import OnboardingPage from "@/pages/onboarding";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -21,6 +22,11 @@ function Router() {
       <Route path="/subscribe" component={Subscribe} />
       <Route path="/success" component={Success} />
       <Route path="/get-started" component={GetStarted} />
+      <Route path="/onboarding">
+        <ProtectedRoute>
+          <OnboardingPage />
+        </ProtectedRoute>
+      </Route>
       <Route path="/">
         <ProtectedRoute>
           <Dashboard />

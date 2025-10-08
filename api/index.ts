@@ -7,6 +7,8 @@ import { generateMessageSchema, emailSignupSchema, type User } from '../shared/s
 import { z } from 'zod';
 import Stripe from 'stripe';
 import authRouter from './auth';
+import airbnbRouter from './airbnb';
+import usersRouter from './users';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -22,6 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // Auth routes
 app.use('/api/auth', authRouter);
+app.use('/api/airbnb', airbnbRouter);
+app.use('/api/users', usersRouter);
 
 // Logging middleware
 app.use((req, res, next) => {

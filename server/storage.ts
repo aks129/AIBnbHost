@@ -5,6 +5,7 @@ export interface IStorage {
   // User operations
   getUsers(): Promise<User[]>;
   getUser(id: string): Promise<User | undefined>;
+  getUserById(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
@@ -186,6 +187,10 @@ export class MemStorage implements IStorage {
     return this.users.get(id);
   }
 
+  async getUserById(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
   async getUserByEmail(email: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(user => user.email === email);
   }
@@ -210,9 +215,9 @@ export class MemStorage implements IStorage {
   async updateUser(id: string, userUpdate: Partial<InsertUser>): Promise<User | undefined> {
     const user = this.users.get(id);
     if (!user) return undefined;
-    
-    const updatedUser: User = { 
-      ...user, 
+
+    const updatedUser: User = {
+      ...user,
       ...userUpdate,
       name: userUpdate.name !== undefined ? userUpdate.name || null : user.name,
       stripeCustomerId: userUpdate.stripeCustomerId !== undefined ? userUpdate.stripeCustomerId || null : user.stripeCustomerId,
@@ -220,6 +225,19 @@ export class MemStorage implements IStorage {
       subscriptionStatus: userUpdate.subscriptionStatus !== undefined ? (userUpdate.subscriptionStatus as User['subscriptionStatus']) || null : user.subscriptionStatus,
       trialEndsAt: userUpdate.trialEndsAt !== undefined ? userUpdate.trialEndsAt || null : user.trialEndsAt,
       subscriptionType: userUpdate.subscriptionType !== undefined ? (userUpdate.subscriptionType as User['subscriptionType']) || null : user.subscriptionType,
+      airbnbAccessToken: userUpdate.airbnbAccessToken !== undefined ? userUpdate.airbnbAccessToken || null : user.airbnbAccessToken,
+      airbnbRefreshToken: userUpdate.airbnbRefreshToken !== undefined ? userUpdate.airbnbRefreshToken || null : user.airbnbRefreshToken,
+      airbnbUserId: userUpdate.airbnbUserId !== undefined ? userUpdate.airbnbUserId || null : user.airbnbUserId,
+      airbnbConnectedAt: userUpdate.airbnbConnectedAt !== undefined ? userUpdate.airbnbConnectedAt || null : user.airbnbConnectedAt,
+      onboardingCompleted: userUpdate.onboardingCompleted !== undefined ? userUpdate.onboardingCompleted || 0 : user.onboardingCompleted,
+      propertyType: userUpdate.propertyType !== undefined ? userUpdate.propertyType || null : user.propertyType,
+      numberOfProperties: userUpdate.numberOfProperties !== undefined ? userUpdate.numberOfProperties || 1 : user.numberOfProperties,
+      primaryLocation: userUpdate.primaryLocation !== undefined ? userUpdate.primaryLocation || null : user.primaryLocation,
+      autoReplyEnabled: userUpdate.autoReplyEnabled !== undefined ? userUpdate.autoReplyEnabled || 1 : user.autoReplyEnabled,
+      responseDelayMinutes: userUpdate.responseDelayMinutes !== undefined ? userUpdate.responseDelayMinutes || 15 : user.responseDelayMinutes,
+      businessHoursStart: userUpdate.businessHoursStart !== undefined ? userUpdate.businessHoursStart || '09:00' : user.businessHoursStart,
+      businessHoursEnd: userUpdate.businessHoursEnd !== undefined ? userUpdate.businessHoursEnd || '21:00' : user.businessHoursEnd,
+      updatedAt: userUpdate.updatedAt || new Date(),
     };
     this.users.set(id, updatedUser);
     return updatedUser;
