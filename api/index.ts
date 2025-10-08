@@ -13,6 +13,7 @@ import reservationsRouter from './reservations';
 import scheduledMessagesRouter from './scheduled-messages';
 import conversationsRouter from './conversations';
 import activitiesRouter from './activities';
+import { authenticateToken } from '../server/middleware/auth';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -26,14 +27,16 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Auth routes
+// Public routes (no auth required)
 app.use('/api/auth', authRouter);
-app.use('/api/airbnb', airbnbRouter);
-app.use('/api/users', usersRouter);
-app.use('/api/reservations', reservationsRouter);
-app.use('/api/scheduled-messages', scheduledMessagesRouter);
-app.use('/api/conversations', conversationsRouter);
-app.use('/api/activities', activitiesRouter);
+
+// Protected routes (require authentication)
+app.use('/api/airbnb', authenticateToken, airbnbRouter);
+app.use('/api/users', authenticateToken, usersRouter);
+app.use('/api/reservations', authenticateToken, reservationsRouter);
+app.use('/api/scheduled-messages', authenticateToken, scheduledMessagesRouter);
+app.use('/api/conversations', authenticateToken, conversationsRouter);
+app.use('/api/activities', authenticateToken, activitiesRouter);
 
 // Logging middleware
 app.use((req, res, next) => {
