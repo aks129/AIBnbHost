@@ -14,6 +14,7 @@ import scheduledMessagesRouter from './scheduled-messages.js';
 import conversationsRouter from './conversations.js';
 import activitiesRouter from './activities.js';
 import integrationsRouter from './integrations.js';
+import aiAgentsRouter from './ai-agents.js';
 import { authenticateToken } from '../server/middleware/auth.js';
 
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -44,6 +45,7 @@ app.use('/api/scheduled-messages', authenticateToken, scheduledMessagesRouter);
 app.use('/api/conversations', authenticateToken, conversationsRouter);
 app.use('/api/activities', authenticateToken, activitiesRouter);
 app.use('/api/integrations', authenticateToken, integrationsRouter);
+app.use('/api/ai-agents', authenticateToken, aiAgentsRouter);
 
 // Logging middleware
 app.use((req, res, next) => {

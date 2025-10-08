@@ -17,6 +17,8 @@ import MessagesPage from "@/pages/messages";
 import ConversationsPage from "@/pages/conversations";
 import ActivitiesPage from "@/pages/activities";
 import ProfilePage from "@/pages/profile";
+import AIAgentsPage from "@/pages/ai-agents";
+import IntegrationsPage from "@/pages/integrations";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -55,6 +57,16 @@ function Router() {
       <Route path="/profile">
         <ProtectedRoute>
           <ProfilePage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/ai-agents">
+        <ProtectedRoute>
+          <AIAgentsPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/integrations">
+        <ProtectedRoute>
+          <IntegrationsPage />
         </ProtectedRoute>
       </Route>
       <Route path="/">

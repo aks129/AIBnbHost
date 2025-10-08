@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, User, Settings, Zap, Puzzle } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 
 export default function Navigation() {
@@ -64,6 +64,30 @@ export default function Navigation() {
               >
                 Activities
               </Link>
+              <Link
+                href="/integrations"
+                data-testid="link-integrations"
+                className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-1"
+              >
+                <Puzzle size={16} />
+                Integrations
+              </Link>
+              <Link
+                href="/ai-agents"
+                data-testid="link-ai-agents"
+                className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-1"
+              >
+                <Zap size={16} />
+                AI Agents
+              </Link>
+              <Link
+                href="/profile"
+                data-testid="link-profile"
+                className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-1"
+              >
+                <User size={16} />
+                Profile
+              </Link>
             </div>
           )}
 
@@ -123,10 +147,23 @@ export default function Navigation() {
               <Link href="/activities" className="airbnb-gray hover:text-red-500 transition-colors">
                 Activities
               </Link>
+              <Link href="/integrations" className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-2">
+                <Puzzle size={16} />
+                Integrations
+              </Link>
+              <Link href="/ai-agents" className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-2">
+                <Zap size={16} />
+                AI Agents
+              </Link>
+              <Link href="/profile" className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-2">
+                <User size={16} />
+                Profile
+              </Link>
               <button
                 onClick={handleLogout}
-                className="text-left airbnb-gray hover:text-red-500 transition-colors"
+                className="text-left airbnb-gray hover:text-red-500 transition-colors flex items-center gap-2"
               >
+                <LogOut size={16} />
                 Logout
               </button>
             </div>
