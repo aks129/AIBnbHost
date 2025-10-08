@@ -9,16 +9,20 @@ const router = express.Router();
 // Register
 router.post('/register', async (req, res) => {
   try {
+    console.log('Register request received:', { email: req.body.email, name: req.body.name });
     const validatedData = registerSchema.parse(req.body);
+    console.log('Validation passed');
 
     // Check if user exists
     const existingUser = await storage.getUserByEmail(validatedData.email);
     if (existingUser) {
+      console.log('User already exists');
       return res.status(409).json({ error: "Email already registered" });
     }
 
     // Hash password
     const hashedPassword = await hashPassword(validatedData.password);
+    console.log('Password hashed');
 
     // Create user
     const user = await storage.createUser({
@@ -26,20 +30,34 @@ router.post('/register', async (req, res) => {
       password: hashedPassword,
       name: validatedData.name,
     });
+    console.log('User created:', user.id);
 
     // Generate token
     const token = generateToken(user);
+    console.log('Token generated');
 
-    res.json({
-      user: sanitizeUser(user),
+    // Sanitize user
+    const sanitizedUser = sanitizeUser(user);
+    console.log('User sanitized:', typeof sanitizedUser.createdAt, typeof sanitizedUser.updatedAt);
+
+    const response = {
+      user: sanitizedUser,
       token
-    });
+    };
+    console.log('Sending response');
+
+    res.json(response);
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error('Validation error:', error.errors);
       return res.status(400).json({ error: "Invalid request data", details: error.errors });
     }
     console.error("Registration error:", error);
-    res.status(500).json({ error: "Failed to register user" });
+    console.error("Error stack:", error instanceof Error ? error.stack : 'No stack');
+    return res.status(500).json({
+      error: "Failed to register user",
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 });
 

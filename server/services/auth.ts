@@ -73,9 +73,9 @@ export function sanitizeUser(user: User) {
   // Convert Date objects to ISO strings for JSON serialization
   return {
     ...rest,
-    createdAt: rest.createdAt instanceof Date ? rest.createdAt.toISOString() : rest.createdAt,
-    updatedAt: rest.updatedAt instanceof Date ? rest.updatedAt.toISOString() : rest.updatedAt,
-    trialEndsAt: rest.trialEndsAt instanceof Date ? rest.trialEndsAt.toISOString() : rest.trialEndsAt,
-    airbnbConnectedAt: rest.airbnbConnectedAt instanceof Date ? rest.airbnbConnectedAt.toISOString() : rest.airbnbConnectedAt,
+    createdAt: rest.createdAt instanceof Date ? rest.createdAt.toISOString() : (rest.createdAt || null),
+    updatedAt: rest.updatedAt instanceof Date ? rest.updatedAt.toISOString() : (rest.updatedAt || null),
+    trialEndsAt: rest.trialEndsAt instanceof Date ? rest.trialEndsAt.toISOString() : (rest.trialEndsAt || null),
+    airbnbConnectedAt: rest.airbnbConnectedAt instanceof Date ? rest.airbnbConnectedAt.toISOString() : (rest.airbnbConnectedAt || null),
   };
 }

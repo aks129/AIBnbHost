@@ -54,7 +54,11 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
     if (capturedJsonResponse) {
-      logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      try {
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      } catch (e) {
+        logLine += ` :: [Response contains non-serializable data]`;
+      }
     }
     if (logLine.length > 80) {
       logLine = logLine.slice(0, 79) + "…";
