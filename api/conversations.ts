@@ -1,7 +1,7 @@
 import express from 'express';
 import { z } from 'zod';
-import { storage } from '../server/storage';
-import { analyzeMessageIntent, generateAutoReply, shouldAutoReply } from '../server/services/auto-reply';
+import { storage } from '../server/storage.js';
+import { analyzeMessageIntent, generateAutoReply, shouldAutoReply } from '../server/services/auto-reply.js';
 import { randomUUID } from 'crypto';
 
 const router = express.Router();

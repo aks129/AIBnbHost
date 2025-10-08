@@ -1,7 +1,7 @@
 import express from 'express';
-import { storage } from '../server/storage';
+import { storage } from '../server/storage.js';
 import { registerSchema, loginSchema } from '../shared/schema';
-import { hashPassword, comparePassword, generateToken, sanitizeUser } from '../server/services/auth';
+import { hashPassword, comparePassword, generateToken, sanitizeUser } from '../server/services/auth.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -108,7 +108,7 @@ router.get('/me', async (req, res) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const { verifyToken } = await import('../server/services/auth');
+    const { verifyToken } = await import('../server/services/auth.js');
     const payload = verifyToken(token);
 
     if (!payload) {

@@ -1,6 +1,6 @@
 import express from 'express';
 import { z } from 'zod';
-import { storage } from '../server/storage';
+import { storage } from '../server/storage.js';
 
 const router = express.Router();
 

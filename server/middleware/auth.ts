@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '../services/auth';
-import { storage } from '../storage';
+import { verifyToken } from '../services/auth.js';
+import { storage } from '../storage.js';
 
 // Extend Express Request type to include user
 declare global {

@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import express from 'express';
-import { storage } from '../server/storage';
-import { generateGuestMessage, analyzeGuestSentiment } from '../server/services/claude';
-import { sendSignupNotification, sendDemoInterestNotification } from '../server/services/email';
+import { storage } from '../server/storage.js';
+import { generateGuestMessage, analyzeGuestSentiment } from '../server/services/claude.js';
+import { sendSignupNotification, sendDemoInterestNotification } from '../server/services/email.js';
 import { generateMessageSchema, emailSignupSchema, type User } from '../shared/schema';
 import { z } from 'zod';
 import Stripe from 'stripe';
@@ -13,7 +13,7 @@ import reservationsRouter from './reservations';
 import scheduledMessagesRouter from './scheduled-messages';
 import conversationsRouter from './conversations';
 import activitiesRouter from './activities';
-import { authenticateToken } from '../server/middleware/auth';
+import { authenticateToken } from '../server/middleware/auth.js';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
