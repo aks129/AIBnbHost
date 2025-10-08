@@ -55,18 +55,31 @@ npm run db:push
 
 ### Database Schema
 All tables are defined in [shared/schema.ts](shared/schema.ts):
-- `users` - Subscriber info with Stripe customer/subscription IDs
+- `users` - User accounts with authentication, Stripe info, Airbnb integration, onboarding progress, and auto-reply settings
 - `guests` - Guest details, check-in/out dates, guest types, special requests
 - `messages` - AI-generated and manual messages with timestamps and template tracking
 - `templates` - Reusable message templates by category and guest type
 - `analytics` - Monthly performance metrics and satisfaction data
 - `email_signups` - Lead generation tracking
+- `airbnbProperties` - Connected Airbnb property listings
+- `reservations` - Guest reservations from Airbnb
+- `scheduledMessages` - Automated message scheduling (pre-arrival, check-in, etc.)
+- `conversationMessages` - Guest conversation history
+- `activityRecommendations` - AI-generated local activity recommendations
 
 ### AI Integration
-Claude AI service ([server/services/claude.ts](server/services/claude.ts)):
+Claude AI services:
 - **Model**: Always use `claude-sonnet-4-20250514` (latest)
+
+**[server/services/claude.ts](server/services/claude.ts):**
 - `generateGuestMessage()` - Creates personalized messages based on guest type, communication stage, tone, and context
 - `analyzeGuestSentiment()` - Returns sentiment analysis as JSON: `{sentiment: string, confidence: number}`
+
+**[server/services/auto-reply.ts](server/services/auto-reply.ts):**
+- `analyzeMessageIntent()` - Analyzes guest messages to determine category, urgency, and if host attention is required
+- `generateAutoReply()` - Creates context-aware automated responses using conversation history
+- `shouldAutoReply()` - Decision engine for when to auto-reply based on intent, urgency, and business hours
+- `generateActivityRecommendations()` - AI-powered local activity and attraction recommendations
 
 ### Stripe Integration
 - Subscription creation with 30-day trials ([server/routes.ts:240](server/routes.ts#L240))
@@ -87,6 +100,10 @@ See [.env.example](.env.example) for all required environment variables.
 - `ANTHROPIC_API_KEY` or `CLAUDE_API_KEY` - Claude AI API key
 - `STRIPE_SECRET_KEY` - Stripe secret key
 - `SENDGRID_API_KEY` - SendGrid API key (optional)
+- `JWT_SECRET` - Secret key for JWT authentication tokens
+- `AIRBNB_CLIENT_ID` - Airbnb OAuth client ID (for partner API access)
+- `AIRBNB_CLIENT_SECRET` - Airbnb OAuth client secret
+- `AIRBNB_REDIRECT_URI` - OAuth callback URL (e.g., https://yourdomain.com/api/airbnb/callback)
 - `PORT` - Server port (default: 5000, local dev only)
 
 **Frontend (Build-time - must be prefixed with `VITE_`)**:
@@ -138,6 +155,61 @@ This app follows Vercel best practices for full-stack applications:
 6. **Build Output**:
    - Vite builds to `dist/` (frontend static files)
    - Vercel automatically builds TypeScript files in `api/` folder
+
+## Phase 2 Implementation Complete
+
+All Phase 2 features have been implemented:
+
+### Authentication System (Phase 2.1 & 2.2)
+- JWT-based authentication with bcrypt password hashing
+- Login and registration pages with form validation
+- Protected routes requiring authentication
+- Auth context provider for global auth state
+- Token persistence in localStorage
+
+### Onboarding Flow (Phase 2.3)
+- 4-step wizard: Property Setup → Airbnb Connection → Message Preferences → Completion
+- Property information collection (type, count, location)
+- Airbnb OAuth integration (popup-based flow)
+- Auto-reply configuration (business hours, delays)
+- Progress tracking with step indicators
+
+### Calendar & Reservations (Phase 2.4)
+- Full month calendar view with date navigation
+- Color-coded reservation display by status
+- Upcoming reservations sidebar with guest details
+- Statistics cards (revenue, booking counts)
+- Mock reservation data (awaiting real Airbnb API integration)
+
+### Automated Messaging (Phase 2.4)
+- 5-category template system: Pre-arrival, Check-in, Mid-stay, Check-out, Post-stay
+- Template CRUD operations with inline editor
+- Time offset configuration for scheduling
+- Variable substitution support ([Guest Name], [Property Name], etc.)
+- Enable/disable toggles per template
+
+### Conversations & Auto-Reply (Phase 2.5)
+- Guest conversation management with message threading
+- AI-powered intent analysis (category, urgency, host attention required)
+- Auto-reply generation using Claude with conversation context
+- Smart decision engine for when to auto-reply
+- Manual override capability
+
+### Activity Recommendations (Phase 2.5)
+- AI-generated local recommendations by location
+- Diverse categories: dining, attractions, outdoor, culture
+- Guest preference customization
+- 6 recommendations per generation
+- Shareable with guests via messages
+
+### API Routes
+- `/api/auth` - Authentication (login, register, /me)
+- `/api/users` - User profile and onboarding data
+- `/api/airbnb` - OAuth integration and connection status
+- `/api/reservations` - Reservation listing and sync
+- `/api/scheduled-messages` - Message template CRUD
+- `/api/conversations` - Guest conversations and auto-reply
+- `/api/activities` - Activity recommendation generation
 
 ## Communication Style Preference
 

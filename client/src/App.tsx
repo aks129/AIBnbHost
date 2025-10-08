@@ -14,6 +14,8 @@ import RegisterPage from "@/pages/register";
 import OnboardingPage from "@/pages/onboarding";
 import CalendarPage from "@/pages/calendar";
 import MessagesPage from "@/pages/messages";
+import ConversationsPage from "@/pages/conversations";
+import ActivitiesPage from "@/pages/activities";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -34,9 +36,19 @@ function Router() {
           <CalendarPage />
         </ProtectedRoute>
       </Route>
+      <Route path="/conversations">
+        <ProtectedRoute>
+          <ConversationsPage />
+        </ProtectedRoute>
+      </Route>
       <Route path="/messages">
         <ProtectedRoute>
           <MessagesPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/activities">
+        <ProtectedRoute>
+          <ActivitiesPage />
         </ProtectedRoute>
       </Route>
       <Route path="/">

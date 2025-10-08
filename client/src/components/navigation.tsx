@@ -44,19 +44,26 @@ export default function Navigation() {
                 Calendar
               </Link>
               <Link
+                href="/conversations"
+                data-testid="link-conversations"
+                className="airbnb-gray hover:text-red-500 transition-colors"
+              >
+                Conversations
+              </Link>
+              <Link
                 href="/messages"
                 data-testid="link-messages"
                 className="airbnb-gray hover:text-red-500 transition-colors"
               >
-                Messages
+                Templates
               </Link>
-              <a
-                href="#analytics"
-                data-testid="link-analytics"
+              <Link
+                href="/activities"
+                data-testid="link-activities"
                 className="airbnb-gray hover:text-red-500 transition-colors"
               >
-                Analytics
-              </a>
+                Activities
+              </Link>
             </div>
           )}
 
@@ -107,12 +114,15 @@ export default function Navigation() {
               <Link href="/calendar" className="airbnb-gray hover:text-red-500 transition-colors">
                 Calendar
               </Link>
-              <Link href="/messages" className="airbnb-gray hover:text-red-500 transition-colors">
-                Messages
+              <Link href="/conversations" className="airbnb-gray hover:text-red-500 transition-colors">
+                Conversations
               </Link>
-              <a href="#analytics" className="airbnb-gray hover:text-red-500 transition-colors">
-                Analytics
-              </a>
+              <Link href="/messages" className="airbnb-gray hover:text-red-500 transition-colors">
+                Templates
+              </Link>
+              <Link href="/activities" className="airbnb-gray hover:text-red-500 transition-colors">
+                Activities
+              </Link>
               <button
                 onClick={handleLogout}
                 className="text-left airbnb-gray hover:text-red-500 transition-colors"
