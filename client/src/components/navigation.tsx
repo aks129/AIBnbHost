@@ -36,20 +36,20 @@ export default function Navigation() {
               >
                 Dashboard
               </Link>
-              <a
-                href="#workflows"
-                data-testid="link-workflows"
+              <Link
+                href="/calendar"
+                data-testid="link-calendar"
                 className="airbnb-gray hover:text-red-500 transition-colors"
               >
-                Workflows
-              </a>
-              <a
-                href="#templates"
-                data-testid="link-templates"
+                Calendar
+              </Link>
+              <Link
+                href="/messages"
+                data-testid="link-messages"
                 className="airbnb-gray hover:text-red-500 transition-colors"
               >
-                Templates
-              </a>
+                Messages
+              </Link>
               <a
                 href="#analytics"
                 data-testid="link-analytics"
@@ -104,12 +104,12 @@ export default function Navigation() {
               <Link href="/dashboard" className="airbnb-dark hover:text-red-500 transition-colors">
                 Dashboard
               </Link>
-              <a href="#workflows" className="airbnb-gray hover:text-red-500 transition-colors">
-                Workflows
-              </a>
-              <a href="#templates" className="airbnb-gray hover:text-red-500 transition-colors">
-                Templates
-              </a>
+              <Link href="/calendar" className="airbnb-gray hover:text-red-500 transition-colors">
+                Calendar
+              </Link>
+              <Link href="/messages" className="airbnb-gray hover:text-red-500 transition-colors">
+                Messages
+              </Link>
               <a href="#analytics" className="airbnb-gray hover:text-red-500 transition-colors">
                 Analytics
               </a>

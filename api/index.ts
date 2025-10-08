@@ -9,6 +9,8 @@ import Stripe from 'stripe';
 import authRouter from './auth';
 import airbnbRouter from './airbnb';
 import usersRouter from './users';
+import reservationsRouter from './reservations';
+import scheduledMessagesRouter from './scheduled-messages';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -26,6 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/auth', authRouter);
 app.use('/api/airbnb', airbnbRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/reservations', reservationsRouter);
+app.use('/api/scheduled-messages', scheduledMessagesRouter);
 
 // Logging middleware
 app.use((req, res, next) => {

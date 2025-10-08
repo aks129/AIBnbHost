@@ -12,6 +12,8 @@ import GetStarted from "@/pages/get-started";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import OnboardingPage from "@/pages/onboarding";
+import CalendarPage from "@/pages/calendar";
+import MessagesPage from "@/pages/messages";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -25,6 +27,16 @@ function Router() {
       <Route path="/onboarding">
         <ProtectedRoute>
           <OnboardingPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/calendar">
+        <ProtectedRoute>
+          <CalendarPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/messages">
+        <ProtectedRoute>
+          <MessagesPage />
         </ProtectedRoute>
       </Route>
       <Route path="/">
