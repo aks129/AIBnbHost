@@ -65,9 +65,17 @@ export function extractTokenFromHeader(authHeader: string | undefined): string |
 }
 
 /**
- * Sanitize user object (remove sensitive fields)
+ * Sanitize user object (remove sensitive fields and convert dates to strings)
  */
 export function sanitizeUser(user: User) {
-  const { password, airbnbAccessToken, airbnbRefreshToken, ...sanitized } = user;
-  return sanitized;
+  const { password, airbnbAccessToken, airbnbRefreshToken, ...rest } = user;
+
+  // Convert Date objects to ISO strings for JSON serialization
+  return {
+    ...rest,
+    createdAt: rest.createdAt instanceof Date ? rest.createdAt.toISOString() : rest.createdAt,
+    updatedAt: rest.updatedAt instanceof Date ? rest.updatedAt.toISOString() : rest.updatedAt,
+    trialEndsAt: rest.trialEndsAt instanceof Date ? rest.trialEndsAt.toISOString() : rest.trialEndsAt,
+    airbnbConnectedAt: rest.airbnbConnectedAt instanceof Date ? rest.airbnbConnectedAt.toISOString() : rest.airbnbConnectedAt,
+  };
 }
