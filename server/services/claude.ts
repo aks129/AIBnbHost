@@ -12,8 +12,14 @@ When copying code from this code snippet, ensure you also include this informati
 const DEFAULT_MODEL_STR = "claude-sonnet-4-20250514";
 // </important_do_not_delete>
 
+// Check for API key
+const apiKey = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
+if (!apiKey) {
+  console.error('WARNING: ANTHROPIC_API_KEY or CLAUDE_API_KEY not set in environment variables');
+}
+
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY || 'your-api-key-here',
+  apiKey: apiKey || 'missing-api-key',
 });
 
 export interface MessageGenerationRequest {
@@ -46,6 +52,11 @@ The message should be appropriate for the ${communicationStage} stage of their s
 Keep the message concise but comprehensive, around 2-3 paragraphs.`;
 
   try {
+    // Validate API key before making request
+    if (!apiKey) {
+      throw new Error('ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable is not set. Please configure it in Vercel dashboard.');
+    }
+
     const message = await anthropic.messages.create({
       max_tokens: 1024,
       messages: [{ role: 'user', content: userPrompt }],
@@ -58,16 +69,28 @@ Keep the message concise but comprehensive, around 2-3 paragraphs.`;
     if (content.type === 'text') {
       return content.text;
     }
-    
+
     throw new Error('Unexpected response format from Claude API');
   } catch (error) {
     console.error('Error generating message with Claude:', error);
-    throw new Error(`Failed to generate message: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    if (error instanceof Error) {
+      // Provide more helpful error message for API key issues
+      if (error.message.includes('api_key') || error.message.includes('authentication')) {
+        throw new Error('Claude API authentication failed. Please check your ANTHROPIC_API_KEY in Vercel environment variables.');
+      }
+      throw new Error(`Failed to generate message: ${error.message}`);
+    }
+    throw new Error('Failed to generate message: Unknown error');
   }
 }
 
 export async function analyzeGuestSentiment(message: string): Promise<{ sentiment: string, confidence: number }> {
   try {
+    // Validate API key before making request
+    if (!apiKey) {
+      throw new Error('ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable is not set. Please configure it in Vercel dashboard.');
+    }
+
     const response = await anthropic.messages.create({
       // "claude-sonnet-4-20250514"
       model: DEFAULT_MODEL_STR,
@@ -86,10 +109,17 @@ export async function analyzeGuestSentiment(message: string): Promise<{ sentimen
         confidence: Math.max(0, Math.min(1, result.confidence))
       };
     }
-    
+
     throw new Error('Unexpected response format from Claude API');
   } catch (error) {
     console.error('Error analyzing sentiment with Claude:', error);
-    throw new Error(`Failed to analyze sentiment: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    if (error instanceof Error) {
+      // Provide more helpful error message for API key issues
+      if (error.message.includes('api_key') || error.message.includes('authentication')) {
+        throw new Error('Claude API authentication failed. Please check your ANTHROPIC_API_KEY in Vercel environment variables.');
+      }
+      throw new Error(`Failed to analyze sentiment: ${error.message}`);
+    }
+    throw new Error('Failed to analyze sentiment: Unknown error');
   }
 }

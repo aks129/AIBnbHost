@@ -1,7 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
 
+// Check for API key
+const apiKey = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
+if (!apiKey) {
+  console.error('WARNING: ANTHROPIC_API_KEY or CLAUDE_API_KEY not set in environment variables');
+}
+
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY,
+  apiKey: apiKey || 'missing-api-key',
 });
 
 export interface AutoReplyContext {
