@@ -1,9 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { generateGuestMessage, analyzeGuestSentiment } from "./services/claude";
-import { sendSignupNotification, sendDemoInterestNotification } from "./services/email";
-import { generateMessageSchema, emailSignupSchema, type User } from "@shared/schema";
+import { storage } from "./storage.js";
+import { generateGuestMessage, analyzeGuestSentiment } from "./services/claude.js";
+import { sendSignupNotification, sendDemoInterestNotification } from "./services/email.js";
+import { generateMessageSchema, emailSignupSchema, type User } from "../shared/schema.js";
 import { z } from "zod";
 import Stripe from "stripe";
 

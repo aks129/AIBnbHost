@@ -1,6 +1,6 @@
 import express from 'express';
 import { storage } from '../server/storage.js';
-import { registerSchema, loginSchema } from '../shared/schema';
+import { registerSchema, loginSchema } from '../shared/schema.js';
 import { hashPassword, comparePassword, generateToken, sanitizeUser } from '../server/services/auth.js';
 import { z } from 'zod';
 

@@ -3,16 +3,16 @@ import express from 'express';
 import { storage } from '../server/storage.js';
 import { generateGuestMessage, analyzeGuestSentiment } from '../server/services/claude.js';
 import { sendSignupNotification, sendDemoInterestNotification } from '../server/services/email.js';
-import { generateMessageSchema, emailSignupSchema, type User } from '../shared/schema';
+import { generateMessageSchema, emailSignupSchema, type User } from '../shared/schema.js';
 import { z } from 'zod';
 import Stripe from 'stripe';
-import authRouter from './auth';
-import airbnbRouter from './airbnb';
-import usersRouter from './users';
-import reservationsRouter from './reservations';
-import scheduledMessagesRouter from './scheduled-messages';
-import conversationsRouter from './conversations';
-import activitiesRouter from './activities';
+import authRouter from './auth.js';
+import airbnbRouter from './airbnb.js';
+import usersRouter from './users.js';
+import reservationsRouter from './reservations.js';
+import scheduledMessagesRouter from './scheduled-messages.js';
+import conversationsRouter from './conversations.js';
+import activitiesRouter from './activities.js';
 import { authenticateToken } from '../server/middleware/auth.js';
 
 if (!process.env.STRIPE_SECRET_KEY) {
