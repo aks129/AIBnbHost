@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema, type RegisterRequest } from '@shared/schema';
@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 
 export default function RegisterPage() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { register: registerUser } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +33,7 @@ export default function RegisterPage() {
         title: 'Account created successfully',
         description: 'Welcome to Lana AI!',
       });
-      navigate('/onboarding');
+      setLocation('/onboarding');
     } catch (error) {
       toast({
         title: 'Registration failed',

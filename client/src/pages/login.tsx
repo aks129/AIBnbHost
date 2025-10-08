@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginRequest } from '@shared/schema';
@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { login } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +32,7 @@ export default function LoginPage() {
         title: 'Login successful',
         description: 'Welcome back!',
       });
-      navigate('/dashboard');
+      setLocation('/dashboard');
     } catch (error) {
       toast({
         title: 'Login failed',

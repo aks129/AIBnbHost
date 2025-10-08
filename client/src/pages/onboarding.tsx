@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'wouter';
+import { useLocation } from 'wouter';
 import { useAuth } from '@/contexts/auth-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +18,7 @@ const STEPS = [
 ];
 
 export default function OnboardingPage() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
@@ -71,7 +71,7 @@ export default function OnboardingPage() {
         description: 'Welcome to Lana AI',
       });
 
-      navigate('/dashboard');
+      setLocation('/dashboard');
     } catch (error) {
       toast({
         title: 'Error',
