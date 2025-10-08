@@ -64,4 +64,36 @@ router.get('/profile', async (req, res) => {
   }
 });
 
+// Update user settings
+const settingsSchema = z.object({
+  name: z.string().optional(),
+  autoReplyEnabled: z.number().min(0).max(1).optional(),
+  responseDelayMinutes: z.number().min(0).max(60).optional(),
+  businessHoursStart: z.string().optional(),
+  businessHoursEnd: z.string().optional(),
+});
+
+router.put('/settings', async (req, res) => {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const validatedData = settingsSchema.parse(req.body);
+
+    const updatedUser = await storage.updateUser(req.user.id, {
+      ...validatedData,
+      updatedAt: new Date(),
+    });
+
+    res.json({ user: updatedUser, message: 'Settings updated successfully' });
+  } catch (error) {
+    console.error('Error updating settings:', error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'Invalid data', details: error.errors });
+    }
+    res.status(500).json({ error: 'Failed to update settings' });
+  }
+});
+
 export default router;

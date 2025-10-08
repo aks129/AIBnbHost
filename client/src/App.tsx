@@ -16,6 +16,7 @@ import CalendarPage from "@/pages/calendar";
 import MessagesPage from "@/pages/messages";
 import ConversationsPage from "@/pages/conversations";
 import ActivitiesPage from "@/pages/activities";
+import ProfilePage from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -49,6 +50,11 @@ function Router() {
       <Route path="/activities">
         <ProtectedRoute>
           <ActivitiesPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/profile">
+        <ProtectedRoute>
+          <ProfilePage />
         </ProtectedRoute>
       </Route>
       <Route path="/">
