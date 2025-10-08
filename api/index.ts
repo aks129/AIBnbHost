@@ -309,6 +309,7 @@ app.post("/api/create-subscription", async (req, res) => {
     try {
       await storage.createUser({
         email,
+        password: '', // Empty password for Stripe-only users (will need to set password on first login)
         name,
         stripeCustomerId: customer.id,
         stripeSubscriptionId: subscription.id,

@@ -197,8 +197,8 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { 
-      ...insertUser, 
+    const user: User = {
+      ...insertUser,
       id,
       name: insertUser.name || null,
       stripeCustomerId: insertUser.stripeCustomerId || null,
@@ -206,7 +206,20 @@ export class MemStorage implements IStorage {
       subscriptionStatus: (insertUser.subscriptionStatus as User['subscriptionStatus']) || null,
       trialEndsAt: insertUser.trialEndsAt || null,
       subscriptionType: (insertUser.subscriptionType as User['subscriptionType']) || null,
+      airbnbAccessToken: insertUser.airbnbAccessToken || null,
+      airbnbRefreshToken: insertUser.airbnbRefreshToken || null,
+      airbnbUserId: insertUser.airbnbUserId || null,
+      airbnbConnectedAt: insertUser.airbnbConnectedAt || null,
+      onboardingCompleted: insertUser.onboardingCompleted || 0,
+      propertyType: insertUser.propertyType || null,
+      numberOfProperties: insertUser.numberOfProperties || 1,
+      primaryLocation: insertUser.primaryLocation || null,
+      autoReplyEnabled: insertUser.autoReplyEnabled !== undefined ? insertUser.autoReplyEnabled : 1,
+      responseDelayMinutes: insertUser.responseDelayMinutes || 15,
+      businessHoursStart: insertUser.businessHoursStart || '09:00',
+      businessHoursEnd: insertUser.businessHoursEnd || '21:00',
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
     this.users.set(id, user);
     return user;
