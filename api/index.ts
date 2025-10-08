@@ -6,6 +6,7 @@ import { sendSignupNotification, sendDemoInterestNotification } from '../server/
 import { generateMessageSchema, emailSignupSchema, type User } from '../shared/schema';
 import { z } from 'zod';
 import Stripe from 'stripe';
+import authRouter from './auth';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -18,6 +19,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Auth routes
+app.use('/api/auth', authRouter);
 
 // Logging middleware
 app.use((req, res, next) => {
