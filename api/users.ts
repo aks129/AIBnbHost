@@ -24,10 +24,16 @@ router.put('/onboarding', async (req, res) => {
 
     const validatedData = onboardingSchema.parse(req.body);
 
-    const updatedUser = await storage.updateUser(req.user.id, {
+    // Convert boolean to integer for database (SQLite stores booleans as integers)
+    const dataForStorage = {
       ...validatedData,
+      autoReplyEnabled: validatedData.autoReplyEnabled !== undefined
+        ? (validatedData.autoReplyEnabled ? 1 : 0)
+        : undefined,
       updatedAt: new Date(),
-    });
+    };
+
+    const updatedUser = await storage.updateUser(req.user.id, dataForStorage);
 
     res.json({ user: updatedUser });
   } catch (error) {
