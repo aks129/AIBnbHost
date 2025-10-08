@@ -1,9 +1,18 @@
 import { useState } from "react";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [, navigate] = useLocation();
+  const { isAuthenticated, user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -17,46 +26,67 @@ export default function Navigation() {
               <span className="text-xl font-bold airbnb-dark">Lana AI Airbnb Co-Host</span>
             </div>
           </div>
-          
-          <div className="hidden md:flex items-center space-x-6">
-            <a 
-              href="#dashboard" 
-              data-testid="link-dashboard"
-              className="airbnb-dark hover:text-red-500 transition-colors"
-            >
-              Dashboard
-            </a>
-            <a 
-              href="#workflows" 
-              data-testid="link-workflows"
-              className="airbnb-gray hover:text-red-500 transition-colors"
-            >
-              Workflows
-            </a>
-            <a 
-              href="#templates" 
-              data-testid="link-templates"
-              className="airbnb-gray hover:text-red-500 transition-colors"
-            >
-              Templates
-            </a>
-            <a 
-              href="#analytics" 
-              data-testid="link-analytics"
-              className="airbnb-gray hover:text-red-500 transition-colors"
-            >
-              Analytics
-            </a>
-          </div>
-          
+
+          {isAuthenticated && (
+            <div className="hidden md:flex items-center space-x-6">
+              <Link
+                href="/dashboard"
+                data-testid="link-dashboard"
+                className="airbnb-dark hover:text-red-500 transition-colors"
+              >
+                Dashboard
+              </Link>
+              <a
+                href="#workflows"
+                data-testid="link-workflows"
+                className="airbnb-gray hover:text-red-500 transition-colors"
+              >
+                Workflows
+              </a>
+              <a
+                href="#templates"
+                data-testid="link-templates"
+                className="airbnb-gray hover:text-red-500 transition-colors"
+              >
+                Templates
+              </a>
+              <a
+                href="#analytics"
+                data-testid="link-analytics"
+                className="airbnb-gray hover:text-red-500 transition-colors"
+              >
+                Analytics
+              </a>
+            </div>
+          )}
+
           <div className="flex items-center space-x-4">
-            <Button 
-              data-testid="button-start-trial-nav"
-              className="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors"
-            >
-              Start Trial
-            </Button>
-            
+            {isAuthenticated ? (
+              <>
+                <span className="hidden md:inline text-sm text-gray-600">
+                  {user?.name || user?.email}
+                </span>
+                <Button
+                  data-testid="button-logout"
+                  variant="ghost"
+                  onClick={handleLogout}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut size={16} />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Link href="/login">
+                <Button
+                  data-testid="button-login-nav"
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors"
+                >
+                  Login
+                </Button>
+              </Link>
+            )}
+
             <button
               data-testid="button-mobile-menu"
               className="md:hidden"
@@ -66,14 +96,14 @@ export default function Navigation() {
             </button>
           </div>
         </div>
-        
+
         {/* Mobile Menu */}
-        {isMenuOpen && (
+        {isMenuOpen && isAuthenticated && (
           <div className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4">
-              <a href="#dashboard" className="airbnb-dark hover:text-red-500 transition-colors">
+              <Link href="/dashboard" className="airbnb-dark hover:text-red-500 transition-colors">
                 Dashboard
-              </a>
+              </Link>
               <a href="#workflows" className="airbnb-gray hover:text-red-500 transition-colors">
                 Workflows
               </a>
@@ -83,6 +113,12 @@ export default function Navigation() {
               <a href="#analytics" className="airbnb-gray hover:text-red-500 transition-colors">
                 Analytics
               </a>
+              <button
+                onClick={handleLogout}
+                className="text-left airbnb-gray hover:text-red-500 transition-colors"
+              >
+                Logout
+              </button>
             </div>
           </div>
         )}
