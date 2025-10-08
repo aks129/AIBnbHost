@@ -27,6 +27,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Favicon handler (prevent 500 errors)
+app.get('/favicon.ico', (_req, res) => {
+  res.status(204).end();
+});
+
 // Public routes (no auth required)
 app.use('/api/auth', authRouter);
 

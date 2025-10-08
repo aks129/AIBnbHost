@@ -6,6 +6,11 @@ import { z } from 'zod';
 
 const router = express.Router();
 
+// Health check
+router.get('/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Register
 router.post('/register', async (req, res) => {
   try {
