@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { useAuth } from "@/contexts/auth-context";
+import Navigation from "@/components/navigation";
 
 interface UserProfile {
   id: string;
@@ -31,6 +33,7 @@ interface Integration {
 
 export default function Profile() {
   const [, setLocation] = useLocation();
+  const { user: authUser, isLoading: authLoading, isAuthenticated } = useAuth();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"account" | "integrations">("account");
@@ -74,43 +77,25 @@ export default function Profile() {
   ]);
 
   useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
-  const fetchUserProfile = async () => {
-    try {
-      const token = localStorage.getItem("auth_token");
-      if (!token) {
+    if (!authLoading) {
+      if (!isAuthenticated) {
         setLocation("/login");
         return;
       }
-
-      const response = await fetch("/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
+      if (authUser) {
+        setUser(authUser as any);
 
         // Update integrations connected status
         setIntegrations(prev => prev.map(integration => {
-          if (integration.id === "airbnb" && data.user.airbnbUserId) {
+          if (integration.id === "airbnb" && authUser.airbnbUserId) {
             return { ...integration, connected: true, status: "Connected" };
           }
           return integration;
         }));
-      } else {
-        setLocation("/login");
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch user profile:", error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [authUser, authLoading, isAuthenticated, setLocation]);
 
   const handleAirbnbConnect = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,10 +204,13 @@ export default function Profile() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-600">Loading profile...</div>
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 64px)' }}>
+          <div className="text-gray-600">Loading profile...</div>
+        </div>
       </div>
     );
   }
@@ -233,6 +221,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navigation />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
