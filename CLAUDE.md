@@ -81,6 +81,26 @@ Claude AI services:
 - `shouldAutoReply()` - Decision engine for when to auto-reply based on intent, urgency, and business hours
 - `generateActivityRecommendations()` - AI-powered local activity and attraction recommendations
 
+### PriceLabs Integration
+Dynamic pricing integration via PriceLabs API.
+
+**[server/services/pricelabs.ts](server/services/pricelabs.ts):**
+- `getListings()` - Fetches all connected listings from PriceLabs account
+- `getListingPricing()` - Gets pricing recommendations for a specific listing
+- `getNeighborhoodData()` - Retrieves market/neighborhood data for a listing
+- `getMarketData()` - Gets market analytics for a specific location
+- `syncListingPricing()` - Pushes pricing updates to PriceLabs
+- `getAccountInfo()` - Retrieves account information and API status
+- `testConnection()` - Tests API connection with provided key
+
+**API Routes:**
+- `GET /api/pricelabs/listings` - List all PriceLabs listings
+- `GET /api/pricelabs/listings/:listingId/pricing` - Get pricing for a listing
+- `GET /api/pricelabs/neighborhood?listing_id=X&pms=Y` - Get neighborhood data
+- `GET /api/pricelabs/market?location=X` - Get market analytics
+- `GET /api/pricelabs/account` - Get account info
+- `POST /api/pricelabs/test-connection` - Test API connection
+
 ### Stripe Integration
 - Subscription creation with 30-day trials ([server/routes.ts:240](server/routes.ts#L240))
 - Payment intent creation for one-time payments
@@ -105,6 +125,7 @@ See [.env.example](.env.example) for all required environment variables.
 - `AIRBNB_CLIENT_SECRET` - Airbnb OAuth client secret
 - `AIRBNB_REDIRECT_URI` - OAuth callback URL (e.g., https://yourdomain.com/api/airbnb/callback)
 - `PORT` - Server port (default: 5000, local dev only)
+- `PRICELABS_API_KEY` - PriceLabs dynamic pricing API key (for pricing integration)
 
 **Frontend (Build-time - must be prefixed with `VITE_`)**:
 - `VITE_STRIPE_PUBLIC_KEY` - Stripe publishable key (required for payments)

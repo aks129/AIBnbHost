@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage.js";
 import { generateGuestMessage, analyzeGuestSentiment } from "./services/claude.js";
 import { sendSignupNotification, sendDemoInterestNotification } from "./services/email.js";
+import { priceLabsService } from "./services/pricelabs.js";
 import { generateMessageSchema, emailSignupSchema, type User } from "../shared/schema.js";
 import { z } from "zod";
 import Stripe from "stripe";
@@ -387,6 +388,131 @@ export async function setupRoutes(app: Express): Promise<void> {
     } catch (error) {
       console.error("Webhook error:", error);
       res.status(400).send(`Webhook Error: ${error}`);
+    }
+  });
+
+  // PriceLabs API routes
+  app.get("/api/pricelabs/listings", async (req, res) => {
+    try {
+      const result = await priceLabsService.getListings();
+      if (!result.success) {
+        return res.status(400).json({ error: result.error, message: result.message });
+      }
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error fetching PriceLabs listings:", error);
+      res.status(500).json({
+        error: "Failed to fetch listings",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/pricelabs/listings/:listingId/pricing", async (req, res) => {
+    try {
+      const { listingId } = req.params;
+      const { start_date, end_date } = req.query;
+
+      const result = await priceLabsService.getListingPricing(
+        listingId,
+        start_date as string | undefined,
+        end_date as string | undefined
+      );
+
+      if (!result.success) {
+        return res.status(400).json({ error: result.error, message: result.message });
+      }
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error fetching PriceLabs pricing:", error);
+      res.status(500).json({
+        error: "Failed to fetch pricing",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/pricelabs/neighborhood", async (req, res) => {
+    try {
+      const { listing_id, pms } = req.query;
+
+      if (!listing_id) {
+        return res.status(400).json({ error: "listing_id is required" });
+      }
+
+      const result = await priceLabsService.getNeighborhoodData(
+        listing_id as string,
+        pms as string | undefined
+      );
+
+      if (!result.success) {
+        return res.status(400).json({ error: result.error, message: result.message });
+      }
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error fetching PriceLabs neighborhood data:", error);
+      res.status(500).json({
+        error: "Failed to fetch neighborhood data",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/pricelabs/market", async (req, res) => {
+    try {
+      const { location, start_date, end_date } = req.query;
+
+      if (!location) {
+        return res.status(400).json({ error: "location is required" });
+      }
+
+      const result = await priceLabsService.getMarketData(
+        location as string,
+        start_date as string | undefined,
+        end_date as string | undefined
+      );
+
+      if (!result.success) {
+        return res.status(400).json({ error: result.error, message: result.message });
+      }
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error fetching PriceLabs market data:", error);
+      res.status(500).json({
+        error: "Failed to fetch market data",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/pricelabs/account", async (req, res) => {
+    try {
+      const result = await priceLabsService.getAccountInfo();
+      if (!result.success) {
+        return res.status(400).json({ error: result.error, message: result.message });
+      }
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error fetching PriceLabs account info:", error);
+      res.status(500).json({
+        error: "Failed to fetch account info",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/pricelabs/test-connection", async (req, res) => {
+    try {
+      const { apiKey } = req.body;
+      const result = await priceLabsService.testConnection(apiKey);
+      res.json(result);
+    } catch (error) {
+      console.error("Error testing PriceLabs connection:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to test connection",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
