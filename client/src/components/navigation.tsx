@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, User, Settings, Zap, Puzzle } from "lucide-react";
+import { Menu, X, LogOut, User, Settings, Zap, Puzzle, DollarSign } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 
 export default function Navigation() {
@@ -63,6 +63,14 @@ export default function Navigation() {
                 className="airbnb-gray hover:text-red-500 transition-colors"
               >
                 Activities
+              </Link>
+              <Link
+                href="/pricelabs"
+                data-testid="link-pricelabs"
+                className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-1"
+              >
+                <DollarSign size={16} />
+                Pricing
               </Link>
               <Link
                 href="/integrations"
@@ -146,6 +154,10 @@ export default function Navigation() {
               </Link>
               <Link href="/activities" className="airbnb-gray hover:text-red-500 transition-colors">
                 Activities
+              </Link>
+              <Link href="/pricelabs" className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-2">
+                <DollarSign size={16} />
+                Pricing
               </Link>
               <Link href="/integrations" className="airbnb-gray hover:text-red-500 transition-colors flex items-center gap-2">
                 <Puzzle size={16} />

@@ -19,6 +19,7 @@ import ActivitiesPage from "@/pages/activities";
 import ProfilePage from "@/pages/profile";
 import AIAgentsPage from "@/pages/ai-agents";
 import IntegrationsPage from "@/pages/integrations";
+import PriceLabsPage from "@/pages/pricelabs";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -67,6 +68,11 @@ function Router() {
       <Route path="/integrations">
         <ProtectedRoute>
           <IntegrationsPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/pricelabs">
+        <ProtectedRoute>
+          <PriceLabsPage />
         </ProtectedRoute>
       </Route>
       <Route path="/">
